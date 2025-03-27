@@ -1,0 +1,155 @@
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
+
+export interface Database {
+  public: {
+    Tables: {
+      users: {
+        Row: {
+          id: string
+          name: string | null
+          email: string
+          password: string
+          role: "ADMIN" | "MANAGER" | "STAFF"
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name?: string | null
+          email: string
+          password: string
+          role?: "ADMIN" | "MANAGER" | "STAFF"
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string | null
+          email?: string
+          password?: string
+          role?: "ADMIN" | "MANAGER" | "STAFF"
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      guests: {
+        Row: {
+          id: string
+          first_name: string
+          last_name: string
+          email: string
+          phone: string | null
+          address: string | null
+          id_number: string | null
+          id_type: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          first_name: string
+          last_name: string
+          email: string
+          phone?: string | null
+          address?: string | null
+          id_number?: string | null
+          id_type?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          first_name?: string
+          last_name?: string
+          email?: string
+          phone?: string | null
+          address?: string | null
+          id_number?: string | null
+          id_type?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      rooms: {
+        Row: {
+          id: string
+          room_number: string
+          type: "SINGLE" | "DOUBLE" | "TWIN" | "SUITE" | "DELUXE"
+          price: number
+          status: "AVAILABLE" | "OCCUPIED" | "MAINTENANCE" | "RESERVED"
+          capacity: number
+          amenities: string[] | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          room_number: string
+          type: "SINGLE" | "DOUBLE" | "TWIN" | "SUITE" | "DELUXE"
+          price: number
+          status?: "AVAILABLE" | "OCCUPIED" | "MAINTENANCE" | "RESERVED"
+          capacity: number
+          amenities?: string[] | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          room_number?: string
+          type?: "SINGLE" | "DOUBLE" | "TWIN" | "SUITE" | "DELUXE"
+          price?: number
+          status?: "AVAILABLE" | "OCCUPIED" | "MAINTENANCE" | "RESERVED"
+          capacity?: number
+          amenities?: string[] | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      bookings: {
+        Row: {
+          id: string
+          check_in_date: string
+          check_out_date: string
+          status: "PENDING" | "CONFIRMED" | "CHECKED_IN" | "CHECKED_OUT" | "CANCELLED"
+          total_amount: number
+          payment_status: "UNPAID" | "PARTIALLY_PAID" | "PAID" | "REFUNDED"
+          special_requests: string | null
+          guest_id: string
+          room_id: string
+          user_id: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          check_in_date: string
+          check_out_date: string
+          status?: "PENDING" | "CONFIRMED" | "CHECKED_IN" | "CHECKED_OUT" | "CANCELLED"
+          total_amount: number
+          payment_status?: "UNPAID" | "PARTIALLY_PAID" | "PAID" | "REFUNDED"
+          special_requests?: string | null
+          guest_id: string
+          room_id: string
+          user_id: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          check_in_date?: string
+          check_out_date?: string
+          status?: "PENDING" | "CONFIRMED" | "CHECKED_IN" | "CHECKED_OUT" | "CANCELLED"
+          total_amount?: number
+          payment_status?: "UNPAID" | "PARTIALLY_PAID" | "PAID" | "REFUNDED"
+          special_requests?: string | null
+          guest_id?: string
+          room_id?: string
+          user_id?: string
+          created_at?: string
+          updated_at?: string
+        }
+      }
+    }
+  }
+}
+
