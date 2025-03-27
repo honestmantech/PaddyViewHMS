@@ -1,5 +1,5 @@
-import { compare, hash } from 'bcrypt'
-import supabase from "./supabase"
+import { compare, hash } from "bcryptjs"
+import supabase from "./supabase-client"
 
 export async function getUserByEmail(email: string) {
   try {
