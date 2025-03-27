@@ -1,35 +1,91 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { createUser, getUserByEmail } from "@/lib/auth"
+import { compare, hash } from "bcryptjs"
+import supabase from "./supabase-client"
 
-export async function POST(request: NextRequest) {
+export async function getUserByEmail(email: string) {
   try {
-    const body = await request.json()
+    const { data, error } = await supabase.from("users").select("*").eq("email", email).single()
 
-    if (!body.name || !body.email || !body.password) {
-      return NextResponse.json({ error: "Name, email, and password are required" }, { status: 400 })
+    if (error) {
+      if (error.code === "PGRST116") {
+        // No rows returned - user not found
+        return null
+      }
+      throw error
     }
 
-    // Check if user already exists
-    const existingUser = await getUserByEmail(body.email)
+    return data
+  } catch (error) {
+    console.error("Error getting user by email:", error)
+    throw error
+  }
+}
 
-    if (existingUser) {
-      return NextResponse.json({ error: "User with this email already exists" }, { status: 400 })
+export async function createUser(userData: {
+  name: string
+  email: string
+  password: string
+  role?: "ADMIN" | "MANAGER" | "STAFF"
+}) {
+  try {
+    const hashedPassword = await hash(userData.password, 10)
+
+    const { data, error } = await supabase
+      .from("users")
+      .insert({
+        name: userData.name,
+        email: userData.email,
+        password: hashedPassword,
+        role: userData.role || "STAFF",
+      })
+      .select("id, name, email, role, created_at, updated_at")
+      .single()
+
+    if (error) throw error
+
+    return data
+  } catch (error) {
+    console.error("Error creating user:", error)
+    throw error
+  }
+}
+
+export async function validateCredentials(email: string, password: string) {
+  try {
+    const user = await getUserByEmail(email)
+
+    if (!user) {
+      return null
     }
 
-    const user = await createUser({
-      name: body.name,
-      email: body.email,
-      password: body.password,
-      role: body.role,
-    })
+    const isPasswordValid = await compare(password, user.password)
+
+    if (!isPasswordValid) {
+      return null
+    }
 
     // Don't return the password
     const { password: _, ...userWithoutPassword } = user
 
-    return NextResponse.json(userWithoutPassword, { status: 201 })
+    return userWithoutPassword
   } catch (error) {
-    console.error("Registration error:", error)
-    return NextResponse.json({ error: "Registration failed" }, { status: 500 })
+    console.error("Error validating credentials:", error)
+    throw error
+  }
+}
+
+export async function getAllUsers() {
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .select("id, name, email, role, created_at, updated_at")
+      .order("name", { ascending: true })
+
+    if (error) throw error
+
+    return data || []
+  } catch (error) {
+    console.error("Error getting all users:", error)
+    throw error
   }
 }
 
