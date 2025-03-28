@@ -1,15 +1,17 @@
 /** @type {import('next').NextConfig} */
-const userConfig = {
+const nextConfig = {
+  reactStrictMode: true,
+  swcMinify: true,
   // Ensure environment variables are available at build time
   env: {
     DATABASE_URL: process.env.DATABASE_URL,
     JWT_SECRET: process.env.JWT_SECRET,
   },
-  // Add any Supabase-specific configurations
+  // Use serverExternalPackages instead of serverComponentsExternalPackages
   experimental: {
-    // Keep only necessary experimental features
-    serverComponentsExternalPackages: ['bcryptjs'],
+    serverExternalPackages: ["bcryptjs", "jsonwebtoken", "mongoose"],
   },
 }
 
-export default userConfig
+module.exports = nextConfig
+
